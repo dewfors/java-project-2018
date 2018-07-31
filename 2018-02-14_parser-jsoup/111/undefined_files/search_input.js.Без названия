@@ -1,0 +1,72 @@
+$(function(){
+
+	// select box
+	$('body').on('click','.select-box-label',function(){
+		var wrap = $(this).closest('.ssearch-wrapper');	
+		wrap.find('.select-box-list').show(); 
+		// if offset left is negative
+		var offset = wrap.find('.select-box-list').offset();
+		if( offset.left < 0){
+			wrap.find('.select-box-list').css('right', offset.left-6);
+		} else {
+			wrap.find('.select-box-list').css('right', -2);
+		} 
+        wrap.find('.ssearch-result-box').hide();
+	}); 
+
+	$('body').on('click','.select-box-list span',function(){
+	    var wrap = $(this).closest('.ssearch-wrapper');	
+		var val = $(this).text();
+		wrap.find('.select-box-list span').removeClass('selected');
+		$(this).addClass('selected');
+        var cat_id = $(this).attr('data-id');
+        
+        if(cat_id > 0) {
+            wrap.find('[name="category_id"]').val(cat_id);
+        } else {
+            wrap.find('[name="category_id"]').val('');
+        }
+        
+		wrap.find('.select-box-label span').text(val);
+		wrap.find('.select-box-list').hide();
+	});
+    
+	$('.ssearch-select-box').mouseleave(function(){
+	    var wrap = $(this).closest('.ssearch-wrapper');	
+		wrap.find('.select-box-list').hide();
+	});
+
+	// autocomplete show/hide
+	$(document).on('click', function(e){
+        if($(e.target).closest('.ssearch-wrapper').length === 0) {
+		  $('.ssearch-result-box').hide();
+		}
+	});
+	
+	function marginInput(){
+		$('.ssearch-key-box').each(function(){
+			var wrap = $(this).closest('.ssearch-wrapper');	
+			$(this).css('margin-right',wrap.find('.ssearch-right').width() + 4);
+		});
+	}
+        
+	// responsive 
+	function smaller(){ 
+		$('.ssearch-wrapper').each(function(){
+			var wrap = $(this),
+				size = wrap.width();
+				if( size < 420){
+					if(!wrap.hasClass('small-screen'))
+						wrap.addClass('small-screen');
+					 	marginInput();
+				} else {
+					if(wrap.hasClass('small-screen'))
+						wrap.removeClass('small-screen');
+						 marginInput();
+				}
+		});
+	}
+	smaller();
+	marginInput();
+	$(window).resize(function(){ smaller();  marginInput(); });
+});

@@ -1,0 +1,165 @@
+/**
+ * Проверка Телефона
+ */
+function shop_bestprice__form_init() {
+    $('.i-bestprice__phone').inputmask({
+                mask: "+7 (900) 000-00-00",
+                definitions: {
+                    "9" : {
+                        validator: "[9]",
+                        placeholder: "_"
+                    },
+
+                    "0" : {
+                        validator: "[0-9]",
+                        cardinality: 1
+                    }
+                }
+            });
+}
+
+/**
+ * Кнопка  нашли дешевле
+ */
+$(document).on('click', '.i-bestprice__button', function (e) {
+    e.preventDefault();
+
+    var url = $(this).data('url');
+
+    if ($.magnificPopup) {
+        $.magnificPopup.open({
+            type: 'ajax',
+            overflowY: 'scroll',
+            closeBtnInside: true,
+            items: {
+                src: url
+            },
+            callbacks: {
+                parseAjax: function (mfpResponse) {
+                    mfpResponse.data = '<div class="b-bestprice__supreme">' + mfpResponse.data + '</div>';
+                }
+            }
+        });
+    } else if (!$.fancybox) {
+
+        var $pop_up_modal = $('#popup_modal');
+
+        if ($.remodal && $pop_up_modal.length) {
+
+            $pop_up_modal = $pop_up_modal.remodal();
+
+            var $content = $('#popup_modal .remodal_content');
+            $content.empty();
+
+            $.ajax({
+                url: url,
+                success: function (data) {
+
+                    $content.append(data);
+                    $(document).trigger('ajax_loaded');
+                    $pop_up_modal.open();
+
+                    //iOS fixed scrollTop
+                    if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+                        $('html,body').animate({scrollTop: 0}, 500);
+                    }
+
+                    $(document).on('closed', '.remodal', function () {
+                        $content.empty();
+                    });
+                }
+            });
+
+
+        } else {
+            var libdir = $(this).data('libdir');
+            var $link_css = $('<link/>', {
+                rel: 'stylesheet',
+                type: 'text/css',
+                href: libdir + "jquery.fancybox.css"
+            });
+            $link_css.appendTo('head');
+            $link_css[0].onload = function () {
+                $.getScript(libdir + "jquery.fancybox.pack.js", function () {
+                    $.fancybox({type: 'ajax', href: url});
+                });
+            };
+        }
+    } else {
+        $.fancybox({type: 'ajax', href: url});
+    }
+});
+
+/**
+ * Ajax отправка форм
+ */
+$(document).on('submit', '.i-bestprice__submit', function (e) {
+    e.preventDefault();
+    var $form = $(this);
+    var $parent = $form.closest('.i-bestprice');
+    var $loading = $parent.find('.b-bestprice__loading');
+    var $phones = $form.find('.i-bestprice__phone');
+
+    if (($phones.length > 0) && (typeof Inputmask !== 'undefined')) {
+
+        var has_error = false;
+
+        $phones.each(function () {
+            var $phone_field = $(this);
+            var $error = $phone_field.closest('.i-bestprice__phone_field').find('.i-bestprice__phone_error');
+
+            var val = $phone_field.val();
+            var default_val = $phone_field.data('default-value');
+
+            if (val) {
+                //Убираем из сравниваемых значений, все лишние символы
+                val = val.replace('+', '').replace(/ /g, '').replace('(', '').replace(')', '');
+
+                if (default_val) {
+                    default_val = default_val.toString().replace('+', '').replace(/ /g, '').replace('(', '').replace(')', '');
+                }
+
+                if (val === default_val) {
+                    $phone_field.val('');
+                }
+            }
+
+            if (this.hasAttribute('required') || $phone_field.inputmask('unmaskedvalue') != '+___________') {
+                if (!$phone_field.inputmask("isComplete")) {
+                    has_error = true;
+                    $phone_field.addClass('wa-error');
+                    $error.show();
+                } else {
+                    $phone_field.removeClass('wa-error');
+                    $error.hide();
+                }
+            }
+
+        });
+
+        if (has_error) {
+            return false;
+        }
+
+    }
+
+    $loading.show();
+
+    var data = $form.serialize();
+
+    $.post($form.data('url'), data, function (response) {
+        $parent.replaceWith(response);
+    }).fail(function (error) {
+        console.log(error);
+    })
+    .always(function () {
+        $loading.hide();
+    });
+});
+
+/**
+ * Анимация на loading
+ */
+$(document).on('mousemove', '.b-bestprice__loading', function (e) {
+    $(this).css('backgroundPosition', (e.offsetX - 50) + "px " + (e.offsetY - 50) + "px");
+});

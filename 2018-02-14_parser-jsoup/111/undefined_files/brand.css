@@ -1,0 +1,48 @@
+.brands-list {
+    margin-left: -2%;
+    padding-bottom: 60px;
+    padding-top: 20px;
+}
+.brands-list li {
+    margin-left: 2%;
+    width: 20%;
+    display: inline-block;
+    font-size: 14px;
+    height: auto;
+    margin-bottom: 1.6em;
+    margin-left: 3%;
+    vertical-align: top;
+}
+.brands-list img {
+    height: auto;
+    max-width: 100%;
+  
+}
+.img-rounded {
+    border-radius: 3px;
+}
+.brands-list a h5 {
+    color: #000;
+    font-weight: 900;
+}
+
+.brands-list a {
+    background: #f5f5f5 none repeat scroll 0 0;
+    border-radius: 3px;
+    display: block;
+    text-decoration: none;
+     border: 1px solid #d0d0d0;
+}
+.text-centered {
+    text-align: center;
+}
+.brands-list a:hover  {
+     background: #ff8c18 none repeat scroll 0 0;
+    border: 1px solid #ff8c18;
+    text-decoration: none;
+    color:#FFF;
+}
+.brands-list a:hover h5 {
+    color: #FFF;
+    
+}

@@ -1,0 +1,48 @@
+/**
+ * Created by Echo-company on 11.09.2016.
+ */
+var buyerstat__echocompany;
+
+function BuyerStatEchoCompany() {
+    var that = this;
+    that.EndPage = function(){
+        if (that.page_id == undefined){
+            that.page_id=0;
+        }
+        if (that.cookie_id && that.base_url) {
+            that.ajax(that.base_url + "buyerstat_ping/" + that.cookie_id + "/"+that.page_id+"/");
+        }
+    }
+
+    that.ajax =  function(url)
+    {
+        var req = null;
+        if (window.XMLHttpRequest) {
+            try {req = new XMLHttpRequest();} catch (e){}
+        } else if (window.ActiveXObject) {
+            try {req = new ActiveXObject('Msxml2.XMLHTTP');} catch (e){
+                try {req = new ActiveXObject('Microsoft.XMLHTTP');} catch (e){}
+            }
+        }
+
+        if (req) {
+            req.open("GET", url, true);
+            req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            req.onreadystatechange = function ()
+            {
+                try {
+                    if (req.readyState == 4) {
+                        if (req.status == 200) {
+                            
+                        }
+                    }
+                }
+                catch( e ) {}
+            };
+            req.send(null);
+        }
+    }
+}
+
+//Запоминаем глобальный объект
+buyerstat__echocompany = new BuyerStatEchoCompany();
