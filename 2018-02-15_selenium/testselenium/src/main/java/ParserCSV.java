@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -126,6 +127,38 @@ public class ParserCSV {
         return findBags;
     }
 
+    List<BagPost> createBagsPost(List<String> rows, int sizeColumn){
+
+        List<BagPost> findBags = new ArrayList<BagPost>();
+
+        for (int i = 0; i < rows.size(); i++) {
+
+            String strElement = rows.get(i);
+            //System.out.println(strElement);
+
+            strElement = replaceIncorrectSymbols(strElement);
+            //System.out.println(strElement);
+
+            String[] words = strElement.split(",",sizeColumn);
+
+            //System.out.println(Arrays.toString(words));
+
+            BagPost bagPost = new BagPost(
+                    words[0],
+                    words[1],
+                    words[2],
+                    words[3],
+                    words[4],
+                    words[5]);
+
+            findBags.add(bagPost);
+//            break;
+        }
+
+
+        return findBags;
+    }
+
     public void writeCSV_bagsUpdate(String fileNamePathToGolden_bagsUpdate, List<String> heads, List<Bag> bags){
         File myFile = new File(fileNamePathToGolden_bagsUpdate);
 
@@ -159,7 +192,13 @@ public class ParserCSV {
     }
 
 
-
+    private String replaceIncorrectSymbols(String str){
+        str = str.replaceAll(",00\"",".00\"");
+        str = str.replaceAll(",\"",",");
+        str = str.replaceAll("\",",",");
+        str = str.replaceAll("\"","");
+        return str;
+    }
 
 
 }

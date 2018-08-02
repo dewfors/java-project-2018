@@ -3,16 +3,16 @@
  */
 public class Bag {
 
-    private String name; //1
+    public String name; //1
     private String nameArt; //2
     private String kodArt; //3
     private String val; //4
-    private String priceSale; //5
+    public String priceSale; //5
     private String availableForOrder; //6 Доступен для заказа
     private String priceCrossed; //7
-    private String priceZakup; //8
-    private String count; //9 В наличии
-    private String countM; //10 В наличии Москва
+    public String priceZakup; //8
+    public String count; //9 В наличии
+    public String countM; //10 В наличии Москва
     private String descrSmall; //11
     private String descr; //12
     private String label; //13
